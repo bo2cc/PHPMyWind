@@ -24,10 +24,104 @@ if($action == 'add')
 {
 	$parentstr = $doaction->GetParentStr();
 
+	//自定义字段处理
+	$fieldname  = '';
+	$fieldvalue = '';
+	$fieldstr   = '';
 
-	$sql = "INSERT INTO `$tbname` (siteid, parentid, parentstr, classname, orderid, checkinfo) VALUES ('$cfg_siteid', '$parentid', '$parentstr', '$classname', '$orderid', '$checkinfo')";
-	if($dosql->ExecNoneQuery($sql))
+	$ids = GetDiyFieldCatePriv('5',$classid);
+	if(!empty($ids)) {
+		$dosql->Execute("SELECT * FROM `#@__diyfield` WHERE infotype=5 AND `id` IN ($ids) AND checkinfo=true ORDER BY orderid ASC");
+		while($row = $dosql->GetArray())
 	{
+			$k = $row['fieldname'];
+			$v = '';
+			if(isset($_POST[$row['fieldname']]))
+			{
+				if(is_array($_POST[$row['fieldname']]))
+				{
+					foreach($_POST[$row['fieldname']] as $post_value)
+					{
+						if(@!get_magic_quotes_gpc())
+    					{
+							$v[] = addslashes($post_value);
+						}
+						else
+						{
+							$v[] = $post_value;
+						}
+					}
+				}
+				else
+				{
+					if(@!get_magic_quotes_gpc())
+					{
+						$v = addslashes($_POST[$row['fieldname']]);
+					}
+					else
+					{
+						$v = $_POST[$row['fieldname']];	
+					}
+				}
+			}
+			else
+			{
+				$v = '';
+			}
+
+			if(!empty($row['fieldcheck']))
+			{
+				if(!preg_match($row['fieldcheck'], $v))
+				{
+					ShowMsg($row['fieldcback']);
+					exit();
+				}
+			}
+	
+			if($row['fieldtype'] == 'datetime')
+			{
+				$v = GetMkTime($v);
+			}
+			
+			if($row['fieldtype'] == 'fileall')
+			{
+				$vTxt = isset($_POST[$row['fieldname'].'_txt']) ? $_POST[$row['fieldname'].'_txt'] : '';
+	
+				if(is_array($v) &&
+				   is_array($vTxt))
+				{
+					$vNum = count($v);
+					$vTmp = '';
+			
+					for($i=0;$i<$vNum;$i++)
+					{
+						if(@!get_magic_quotes_gpc())
+						{
+							$vTmp[] = $v[$i].','.addslashes($vTxt[$i]);
+						}
+						else
+						{
+							$vTmp[] = $v[$i].','.$vTxt[$i];
+						}
+					}
+					
+					$v = serialize($vTmp);
+				}
+			}
+			
+			if($row['fieldtype'] == 'checkbox')
+			{
+				@$v = implode(',',$v);
+			}
+	
+			$fieldname  .= ", $k";
+			$fieldvalue .= ", '$v'";
+			$fieldstr   .= ", $k='$v'";
+		}
+	}
+
+	$sql = "INSERT INTO `$tbname` (siteid, parentid, parentstr, classname, picurl, linkurl, orderid, checkinfo {$fieldname}) VALUES ('$cfg_siteid', '$parentid', '$parentstr', '$classname', '$picurl', '$linkurl', '$orderid', '$checkinfo' {$fieldvalue})";
+	if($dosql->ExecNoneQuery($sql)) {
 		header("location:$gourl");
 		exit();
 	}
@@ -55,8 +149,106 @@ else if($action == 'update')
 		$doaction->UpParentStr($id, $childtbname, 'parentstr', 'classid');
 	}
 
+	//自定义字段处理
+	$fieldname  = '';
+	$fieldvalue = '';
+	$fieldstr   = '';
+	$classid = 0;
 
-	$sql = "UPDATE `$tbname` SET siteid='$cfg_siteid', parentid='$parentid', parentstr='$parentstr', classname='$classname', orderid='$orderid', checkinfo='$checkinfo' WHERE id=$id";
+	$ids = GetDiyFieldCatePriv('5',$classid);
+	if(!empty($ids))
+	{
+		$dosql->Execute("SELECT * FROM `#@__diyfield` WHERE infotype=5 AND `id` IN ($ids) AND checkinfo=true ORDER BY orderid ASC");
+		while($row = $dosql->GetArray())
+		{
+			$k = $row['fieldname'];
+			$v = '';
+			if(isset($_POST[$row['fieldname']]))
+			{
+				if(is_array($_POST[$row['fieldname']]))
+				{
+					foreach($_POST[$row['fieldname']] as $post_value)
+					{
+						if(@!get_magic_quotes_gpc())
+    					{
+							$v[] = addslashes($post_value);
+						}
+						else
+						{
+							$v[] = $post_value;
+						}
+					}
+				}
+				else
+				{
+					if(@!get_magic_quotes_gpc())
+					{
+						$v = addslashes($_POST[$row['fieldname']]);
+					}
+					else
+					{
+						$v = $_POST[$row['fieldname']];	
+					}
+				}
+			}
+			else
+			{
+				$v = '';
+			}
+
+			if(!empty($row['fieldcheck']))
+			{
+				if(!preg_match($row['fieldcheck'], $v))
+				{
+					ShowMsg($row['fieldcback']);
+					exit();
+				}
+			}
+	
+			if($row['fieldtype'] == 'datetime')
+			{
+				$v = GetMkTime($v);
+			}
+			
+			if($row['fieldtype'] == 'fileall')
+			{
+				$vTxt = isset($_POST[$row['fieldname'].'_txt']) ? $_POST[$row['fieldname'].'_txt'] : '';
+	
+				if(is_array($v) &&
+				   is_array($vTxt))
+				{
+					$vNum = count($v);
+					$vTmp = '';
+			
+					for($i=0;$i<$vNum;$i++)
+					{
+						if(@!get_magic_quotes_gpc())
+						{
+							$vTmp[] = $v[$i].','.addslashes($vTxt[$i]);
+						}
+						else
+						{
+							$vTmp[] = $v[$i].','.$vTxt[$i];
+						}
+					}
+					
+					$v = serialize($vTmp);
+				}
+			}
+			
+			if($row['fieldtype'] == 'checkbox')
+			{
+				@$v = implode(',',$v);
+			}
+	
+			$fieldname  .= ", $k";
+			$fieldvalue .= ", '$v'";
+			$fieldstr   .= ", $k='$v'";
+		}
+	}
+
+
+	$sql = "UPDATE `$tbname` SET siteid='$cfg_siteid', parentid='$parentid', parentstr='$parentstr', classname='$classname', picurl='$picurl', linkurl='$linkurl', orderid='$orderid', checkinfo='$checkinfo'{$fieldstr} WHERE id=$id";
 	if($dosql->ExecNoneQuery($sql))
 	{
 		header("location:$gourl");

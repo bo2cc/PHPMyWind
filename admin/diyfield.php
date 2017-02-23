@@ -82,6 +82,9 @@
 				case 4:
 					$infotype = '商品';
 					break;
+				case 5:
+					$infotype = '分类';
+					break;
 				default:
 					$r = $dosql->GetOne("SELECT * FROM `#@__diymodel` WHERE `id`=".$row['infotype']);
 					if(isset($r) && is_array($r))

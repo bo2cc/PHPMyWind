@@ -4,7 +4,7 @@
 **************************
 (C)2010-2015 phpMyWind.com
 update: 2014-5-30 13:34:13
-person: Feng
+person: etfolin
 **************************
 */
 
@@ -33,6 +33,9 @@ switch($infotype)
 		break;
 	case 4:
 		$tbnames = '#@__goods';
+		break;
+	case 5:
+		$tbnames = '#@__maintype';
 		break;
 	default:
 		$r = $dosql->GetOne("SELECT * FROM `#@__diymodel` WHERE `id`=$infotype");
@@ -109,7 +112,9 @@ if($action == 'add')
 	//为变量长度添加括号
 	if($dosql->ExecNoneQuery($sql))
 	{
-		$sql = "INSERT INTO `$tbname` (infotype, catepriv, fieldname, fieldtitle, fielddesc, fieldtype, fieldlong, fieldsel, fieldcheck, fieldcback, orderid, checkinfo) VALUES ('$infotype', '$catepriv', '$fieldname', '$fieldtitle', '$fielddesc', '$fieldtype', '$fieldlong', '$fieldsel', '$fieldcheck', '$fieldcback', '$orderid', '$checkinfo')";
+		$sql = "INSERT INTO `$tbname` 
+		(infotype, catepriv, fieldname, fieldtitle, fielddesc, fieldtype, fieldlong, fieldsel, fieldcheck, fieldcback, orderid, checkinfo) VALUES 
+		('$infotype', '$catepriv', '$fieldname', '$fieldtitle', '$fielddesc', '$fieldtype', '$fieldlong', '$fieldsel', '$fieldcheck', '$fieldcback', '$orderid', '$checkinfo')";
 		if($dosql->ExecNoneQuery($sql))
 		{
 			header("location:$gourl");

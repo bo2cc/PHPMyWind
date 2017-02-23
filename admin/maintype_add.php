@@ -6,6 +6,7 @@
 <title>添加二级类别</title>
 <link href="templates/style/admin.css" rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="templates/js/jquery.min.js"></script>
+<script type="text/javascript" src="templates/js/getuploadify.js"></script>
 <script type="text/javascript" src="templates/js/checkf.func.js"></script>
 </head>
 <body>
@@ -25,10 +26,25 @@
 			<td><input type="text" name="classname" id="classname" class="input" />
 				<span class="maroon">*</span></td>
 		</tr>
+		<tr class="nb ila_diy">
+			<td colspan="2" height="0" id="df"><?php echo GetDiyField(5,0); ?></td>
+		</tr>
 		<tr>
 			<td height="40" align="right">排列顺序：</td>
 			<td><input type="text" name="orderid" id="orderid" class="inputs" value="<?php echo GetOrderID('#@__maintype'); ?>" /></td>
 		</tr>
+		<tr class="mt_pic">
+			<td height="40" align="right">类别图片：</td>
+			<td><input type="text" name="picurl" id="picurl" class="input" />
+				<span class="cnote"><span class="grayBtn" onclick="GetUploadify('uploadify','缩略图上传','image','image',1,<?php echo $cfg_max_file_size; ?>,'picurl')">上 传</span> <span class="rePicTxt">
+				<input type="checkbox" name="rempic" id="rempic" value="true" />
+				远程</span> </span></td>
+		</tr>
+		<tr class="mt_linkurl">
+			<td height="40" align="right">跳转链接：</td>
+			<td><input type="text" name="linkurl" id="linkurl" class="input" /></td>
+		</tr>
+
 		<tr class="nb">
 			<td height="40" align="right">隐藏类别：</td>
 			<td><input type="radio" name="checkinfo" value="true" checked="checked"  />

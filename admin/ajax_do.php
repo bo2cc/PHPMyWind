@@ -157,8 +157,12 @@ if($action == 'diyfield')
 	IsModelPriv('diyfield');
 
 	$type = isset($type) ? $type : '';
+	$sql_type = "SELECT * FROM `#@__infoclass` WHERE `infotype`='$type' ORDER BY orderid ASC";
 
-	$dosql->Execute("SELECT * FROM `#@__infoclass` WHERE `infotype`='$type' ORDER BY orderid ASC");
+	// type=5 为"maintype"类型，这里将分类也作为一种可以添加自定义字段的数据类型，在maintype上添加的自定义字段对所有infoclass有效。修改了maintype_*.php, diyfield_*.php
+	if ($type == 5) $sql_type = "SELECT * FROM `#@__infoclass` ORDER BY orderid ASC";
+
+	$dosql->Execute($sql_type);
 	if($dosql->GetTotalRow())
 	{
 		while($row = $dosql->GetArray())

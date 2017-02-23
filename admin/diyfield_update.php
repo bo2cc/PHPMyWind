@@ -19,7 +19,7 @@ $row = $dosql->GetOne("SELECT * FROM `#@__diyfield` WHERE `id`=$id");
 			<td width="25%" height="40" align="right">所属模型：</td>
 			<td width="75%"><select name="infotype" id="infotype" disabled="disabled">
 				<?php
-				$model = array('0'=>'单页','1'=>'列表','2'=>'图片','3'=>'下载','4'=>'商品');
+				$model = array('0'=>'单页','1'=>'列表','2'=>'图片','3'=>'下载','4'=>'商品','5'=>'分类');
 				foreach($model as $k=>$v)
 				{
 					if($row['infotype'] == $k)
@@ -48,7 +48,9 @@ $row = $dosql->GetOne("SELECT * FROM `#@__diyfield` WHERE `id`=$id");
 		</tr>
 		<tr>
 			<td width="25%" height="40" align="right">所属栏目：</td>
-			<td width="75%"><div class="purviewList">
+			<td width="75%">
+				<div class="purviewList">
+					<span><input type="checkbox" name="classid[]" value="0" />所有栏目</span>
 					<?php
 			$catepriv = explode(',',$row['catepriv']);
 			$dosql->Execute("SELECT * FROM `#@__infoclass` WHERE `infotype`='".$row['infotype']."' ORDER BY orderid ASC");
