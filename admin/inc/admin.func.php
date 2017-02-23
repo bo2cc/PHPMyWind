@@ -118,7 +118,7 @@ function CategoryType($type=0, $id=0, $i=0)
  * @param  $i        int     option缩进位数
  * echo    string            输出<select>
 */
-function GetAllType($tbname='', $tbname2='', $colname='', $id=0, $i=0)
+function GetAllType($tbname='', $tbname2='', $colname='', $id=0, $i=0, $selid=0)
 {
 	global $dosql,$cfg_siteid;
 
@@ -148,6 +148,11 @@ function GetAllType($tbname='', $tbname2='', $colname='', $id=0, $i=0)
 			if($row['id'] == $r["$colname"])
 				$selected = 'selected="selected"';
 		}
+		else if(isset($selid) && ($selid > 0))
+		{
+			if($row['id'] == $selid)
+				$selected = 'selected="selected"';
+		}
 
 		echo '<option value="'.$row['id'].'" '.$selected.'>';
 
@@ -160,7 +165,7 @@ function GetAllType($tbname='', $tbname2='', $colname='', $id=0, $i=0)
 		echo $row['classname'].'</option>';
 
 
-		GetAllType($tbname, $tbname2, $colname, $row['id'], $i);
+		GetAllType($tbname, $tbname2, $colname, $row['id'], $i, $selid);
 	}
 }
 
