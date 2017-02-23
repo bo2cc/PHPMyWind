@@ -703,7 +703,8 @@ function GetDiyField($type='',$id=0,$row='')
 	while($r = $dosql->GetArray())
 	{
 		$catepriv = explode(',',$r['catepriv']);
-		if(in_array($id,$catepriv))
+
+		if ( (in_array($id,$catepriv))||($r['catepriv']=="") )
 		{
 			if(isset($row[$r['fieldname']]))
 				$fieldvalue = $row[$r['fieldname']];
