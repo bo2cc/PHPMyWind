@@ -32,7 +32,7 @@ if($action == 'add')
 	$parentstr = $doaction->GetParentStr();
 
 
-	$sql = "INSERT INTO `$tbname` (siteid, parentid, parentstr, infotype, classname, linkurl, picurl, picwidth, picheight, seotitle, keywords, description, orderid, checkinfo) VALUES ('$cfg_siteid', '$parentid', '$parentstr', '$infotype', '$classname', '$linkurl', '$picurl', '$picwidth', '$picheight', '$seotitle', '$keywords', '$description', '$orderid', '$checkinfo')";
+	$sql = "INSERT INTO `$tbname` (siteid, parentid, parentstr, infotype, classname, mtypesid, linkurl, picurl, picwidth, picheight, seotitle, keywords, description, orderid, checkinfo) VALUES ('$cfg_siteid', '$parentid', '$parentstr', '$infotype', '$classname', '$mtypesid',, '$linkurl', '$picurl', '$picwidth', '$picheight', '$seotitle', '$keywords', '$description', '$orderid', '$checkinfo')";
 	if($dosql->ExecNoneQuery($sql))
 	{
 		//为非超级管理员增加操作权限
@@ -90,7 +90,7 @@ else if($action == 'update')
 		}
 
 
-		$sql = "UPDATE `$tbname` SET siteid='$cfg_siteid', parentid='$parentid', parentstr='$parentstr', infotype='$infotype', classname='$classname', linkurl='$linkurl', picurl='$picurl', picwidth='$picwidth', picheight='$picheight', seotitle='$seotitle', keywords='$keywords', description='$description', orderid='$orderid', checkinfo='$checkinfo' WHERE id=$id";
+		$sql = "UPDATE `$tbname` SET siteid='$cfg_siteid', parentid='$parentid', parentstr='$parentstr', infotype='$infotype', classname='$classname', mtypesid='$mtypesid', linkurl='$linkurl', picurl='$picurl', picwidth='$picwidth', picheight='$picheight', seotitle='$seotitle', keywords='$keywords', description='$description', orderid='$orderid', checkinfo='$checkinfo' WHERE id=$id";
 		if($dosql->ExecNoneQuery($sql))
 		{
 			header("location:$gourl");

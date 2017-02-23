@@ -63,6 +63,12 @@ $row = $dosql->GetOne("SELECT * FROM `#@__infoclass` WHERE `id`=$id");
 			<td>&nbsp;</td>
 		</tr>
 		<tr>
+			<td height="40" align="right">多选类别起始ID：</td>
+			<td><input name="mtypesid" type="text" id="mtypesid" value="<?php echo $row['mtypesid']; ?>"  class="input" />
+				<span class="maroon">*</span><span class="cnote"><a href="maintype.php" target="_blank">类别</a></span></td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
 			<td height="40" align="right">缩略图片：</td>
 			<td><input name="picurl" type="text" id="picurl" class="input" value="<?php echo $row['picurl']; ?>" />
 				<span class="cnote"><span class="grayBtn" onclick="GetUploadify('uploadify','缩略图上传','image','image',1,<?php echo $cfg_max_file_size; ?>,'picurl')">上 传</span></span></td>
