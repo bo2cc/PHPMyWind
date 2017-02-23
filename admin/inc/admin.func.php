@@ -1446,7 +1446,88 @@ function SetSysEvent($m='', $cid=0, $a='all')
 }
 
 
-//获取添加权限的自定义字段
+
+/*
+ * 获取自定义类别（多选）
+ *
+ * @access public
+ * @param  $tbname   string  显示分类的表名称
+ * @param  $tbname2  string  使用分类的表名称
+ * @param  $colname  string  使用分类的表字段
+ * @param  $id       int     区别记录集的ID
+ * @param  $i        int     option缩进位数
+ * echo    string            输出<select>
+*/
+
+function GetAllType2($tbname='', $tbname2='', $colname='', $id=0, $i=0)
+{
+	global $dosql,$cfg_siteid;
+	$r1 = 0;
+	if($i==0) {
+		$r1 = 1; //标志这是最外面的一轮
+		echo '<div style="dispaly:table; width:100%;"><div style="display:none;">';
+	}
+	//标志这是最外面的一轮
+	if(isset($_GET['id']))
+	{
+		$r = $dosql->GetOne("SELECT `$colname` FROM `$tbname2` WHERE `id`=".intval($_GET['id']));
+	}
+	
+	$mt_str = "";
+	if ((isset($_GET['bid']))&&($_GET['bid']<>0)&&($_GET['cid']>2))
+	{
+		$rtemp = $dosql->GetOne("SELECT * FROM `#@__infolist` WHERE id=".$_GET['bid']);
+		$mt_str = "0,1,".$rtemp["multitypestr"];
+		$sql = "SELECT * FROM `#@__infolist` WHERE `classid` = 2 AND `brandpid` = ".$_GET['bid'];
+		$dosql->Execute($sql,$id);
+		$mt_str = $mt_str."2,";
+		while($rtemp = $dosql->GetArray($id)) {
+			$mt_str = $mt_str.$rtemp["multitypestr"];
+		}
+		//echo $mt_str;
+	}
+
+
+	$sql = "SELECT * FROM `$tbname` WHERE `parentid`=$id ORDER BY orderid ASC";
+
+
+	$dosql->Execute($sql,$id);
+	$i++;
+	while($row = $dosql->GetArray($id))
+	{
+		$selected = '';
+
+		if(isset($r) && is_array($r))
+		{
+			if (strpos($r["$colname"],",".$row['id'].",") > 0) {
+				$selected = 'checked';
+			}
+		} else {
+			if (strpos($mt_str,",".$row['id'].",") > 0) {
+				$selected = 'checked';
+			}
+		}
+		
+		if($i==1) echo '</div><div style="float:left; padding:0 10px 10px 0">';
+
+		echo '<div><input type="checkbox" name="multitypestr[]" id="multitypestr'.$row['id'].'" value="'.$row['id'].'" '.$selected.' /><label for="multitypestr'.$row['id'].'" />';
+
+		for($n=1; $n<$i; $n++)
+			echo '&nbsp;&nbsp;';
+	
+		if($row['parentid'] != 0)
+			echo '|- ';
+
+		echo $row['classname'].'</label></div>';
+
+		GetAllType2($tbname, $tbname2, $colname, $row['id'], $i);
+	}
+	
+	if($r1==1) {
+		echo '</div>';
+	}
+}
+
 function GetDiyFieldCatePriv($model, $cid)
 {
 	global $dosql;
@@ -1458,7 +1539,7 @@ function GetDiyFieldCatePriv($model, $cid)
 		if(isset($row['catepriv']))
 		{
 			$catepriv = explode(',', $row['catepriv']);
-			if(in_array($cid, $catepriv))
+			if((in_array($cid, $catepriv))||($catepriv[0]==0))
 			{
 				$str .= $row['id'] . ',';
 			}
