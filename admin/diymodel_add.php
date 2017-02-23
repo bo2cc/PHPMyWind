@@ -44,6 +44,12 @@ $(function(){
 					属　性</span> <span>
 					<input type="checkbox" name="defaultfield[]" value="picurl" checked="checked" />
 					缩略图片</span> <span>
+					<input type="checkbox" name="defaultfield[]" value="ridp" checked="checked" />
+					相关父类</span> <span>
+					<input type="checkbox" name="defaultfield[]" value="rids" checked="checked" />
+					相关子类串</span> <span>
+					<input type="checkbox" name="defaultfield[]" value="mtype" checked="checked" />
+					多选类</span> <span>
 					<input type="checkbox" name="defaultfield[]" value="orderid" checked="checked" />
 					排列排序</span> <span>
 					<input type="checkbox" name="defaultfield[]" value="posttime" checked="checked" />

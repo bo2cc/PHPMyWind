@@ -45,6 +45,12 @@ $row = $dosql->GetOne("SELECT * FROM `#@__diymodel` WHERE id=$id");
 					属　性</span> <span>
 					<input type="checkbox" name="defaultfield[]" value="picurl" <?php if(in_array('picurl', $defaultfield)) echo 'checked="checked"'; ?> />
 					缩略图片</span> <span>
+					<input type="checkbox" name="defaultfield[]" value="ridp" <?php if(in_array('ridp', $defaultfield)) echo 'checked="checked"'; ?>  />
+					相关父类</span> <span>
+					<input type="checkbox" name="defaultfield[]" value="rids" <?php if(in_array('rids', $defaultfield)) echo 'checked="checked"'; ?>  />
+					相关子类串</span> <span>
+					<input type="checkbox" name="defaultfield[]" value="mtype" <?php if(in_array('mtype', $defaultfield)) echo 'checked="checked"'; ?>  />
+					多选类</span> <span>
 					<input type="checkbox" name="defaultfield[]" value="orderid" <?php if(in_array('orderid', $defaultfield)) echo 'checked="checked"'; ?> />
 					排列排序</span> <span>
 					<input type="checkbox" name="defaultfield[]" value="posttime" <?php if(in_array('posttime', $defaultfield)) echo 'checked="checked"'; ?> />

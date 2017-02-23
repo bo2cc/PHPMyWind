@@ -49,9 +49,14 @@ if($action == 'add')
 			  `classid` smallint(5) unsigned NOT NULL COMMENT '信息类别id',
 			  `parentid` smallint(5) unsigned NOT NULL COMMENT '信息类别父id',
 			  `parentstr` varchar(80) NOT NULL COMMENT '信息类别父id字符串',
+
+				`multitypestr` varchar( 80 ) NOT NULL COMMENT '多选mid类别串',
+
 			  `title` varchar(80) NOT NULL COMMENT '标题',
 			  `flag` varchar(30) NOT NULL COMMENT '属性',
 			  `picurl` varchar(100) NOT NULL COMMENT '缩略图片',
+				`ridp` INT( 10 ) NOT NULL COMMENT '父关联ID',
+				`rids` TEXT NOT NULL COMMENT '子关联ID串',
 			  `orderid` smallint(5) unsigned NOT NULL COMMENT '排列排序',
 			  `posttime` int(10) unsigned NOT NULL COMMENT '提交时间',
 			  `checkinfo` enum('true','false') NOT NULL COMMENT '审核状态',
