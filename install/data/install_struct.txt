@@ -782,3 +782,9 @@ CREATE TABLE `#@__weblinktype` (
   `checkinfo` enum('true','false') NOT NULL COMMENT '审核状态',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+ALTER TABLE  `#@__infoclass` ADD  `mtypesid` INT( 10 ) NOT NULL COMMENT '多选类别起始ID' AFTER  `classname`;
+
+ALTER TABLE  `#@__maintype` ADD  `picurl` varchar(100) NOT NULL COMMENT '缩略图片' AFTER  `classname`;
+ALTER TABLE  `#@__maintype` ADD  `linkurl` varchar( 80 ) NOT NULL COMMENT '二级类别默认图片跳转连接4haguan' AFTER  `picurl`;
