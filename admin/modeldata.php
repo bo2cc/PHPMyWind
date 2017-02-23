@@ -55,10 +55,11 @@ while($row = $dosql->GetArray())
 			<?php
 			foreach($fieldArr as $k=>$v)
 			{
-				echo '<td width="20%">'.$v.'</td>';
+				echo '<td>'.$v.'</td>';
 			}
 			?>
-			<td width="20%">更新时间</td>
+			<td class="hidden">更新时间</td>
+			<td>Flag操作</td>
 			<td width="15%" class="endCol">操作</td>
 		</tr>
 		<?php
@@ -92,15 +93,65 @@ while($row = $dosql->GetArray())
 		<tr align="left" class="dataTr">
 			<td height="36" class="firstCol"><input type="checkbox" name="checkid[]" id="checkid[]" value="<?php echo $row['id']; ?>" /></td>
 			<td><?php echo $row['id']; ?></td>
-			<td><?php echo $row['title']; ?> <?php //echo $classname; ?></td>
+			<td><?php echo $row['title']; ?></td>
 			<?php
-			foreach($fieldArr as $k=>$v)
-			{
-				echo '<td>'.ReStrLen($row[$k],20).'</td>';
+			foreach($fieldArr as $k=>$v) {
+				if ($k<>"content"){
+					$modelname = $r['modelname'];
+					echo '<td><input name="'.$k.$row['id'].'" class="datainput" id="'.$k.$row['id'].'" iid="'.$row['id'].'" mname="'.$modelname.'" dname="'.$k.'" type="text" value="'.ReStrLen(strip_tags($row[$k]),200).'"></td>';
+			}
 			}
 			?>
-			<td class="number"><?php echo GetDateTime($row['posttime']); ?></td>
-			<td class="action endCol"><span><a href="modeldata_save.php?m=<?php echo $m; ?>&id=<?php echo $row['id']; ?>&action=check&checkinfo=<?php echo $row['checkinfo']; ?>" title="点击进行审核与未审操作"><?php echo $checkinfo; ?></a></span> | <span><a href="modeldata_update.php?m=<?php echo $m; ?>&id=<?php echo $row['id']; ?>">修改</a></span> | <span class="nb"><a href="modeldata_save.php?m=<?php echo $m; ?>&action=del2&id=<?php echo $row['id']; ?>" onclick="return ConfDel(0);">删除</a></span></td>
+			<td class="number hidden"><?php echo GetDateTime($row['posttime']); ?></td>
+			<td class="action">
+				<?php
+				//信息属性 infoflag
+				$dosql->Execute("SELECT * FROM `#@__infoflag` ORDER BY `orderid` ASC","if");
+				$infoflag = array();
+
+				while($r_sysflags = $dosql->GetArray("if")) {
+
+					$infoflag[] = $r_sysflags;
+					$ifname = $r_sysflags['flagname'];
+					$actflag = $r_sysflags['flag'];
+					$ifflagtemparr = explode($actflag,$row['flag']); 
+					$newflags = $row['flag'];
+					$ifact = "setflag";
+					if (count($ifflagtemparr)==1) {
+						$ifname = "<span>".$ifname."</span>";
+						$t = ",";
+						if ($row['flag']=="") $t = "";
+						$newflags = $row['flag'].$t.$actflag;
+					}
+					else if (count($ifflagtemparr)==2) {
+						$ifname = "<span class='am-btn-primary'>已".$ifname."</span>";
+						if ($ifflagtemparr[0]=="") {
+							$newflags = substr($ifflagtemparr[1],1);
+						}
+						else if ($ifflagtemparr[1]=="") {
+							$newflags = substr($ifflagtemparr[0],0,-1);
+						}
+						else {
+							$newflags = $ifflagtemparr[0].substr($ifflagtemparr[1],1);
+						}
+					}
+					else {
+						$ifname = "ERR";
+					}
+					
+					?>
+					<span>
+						<a href="modeldata_save.php?m=<?php echo $m; ?>&id=<?php echo $row['id']; ?>&cid=<?php echo $cid; ?>&action=<?php echo $ifact; ?>&infoflag=<?php echo $newflags; ?>" title="点击进行审核与未审操作"><?php echo $ifname; ?></a>
+					</span>
+					<?php
+				}
+				?>				
+			</td>
+			<td class="action endCol">
+				<span><a href="modeldata_save.php?m=<?php echo $m; ?>&id=<?php echo $row['id']; ?>&cid=<?php echo $cid; ?>&action=check&checkinfo=<?php echo $row['checkinfo']; ?>" title="点击进行审核与未审操作"><?php echo $checkinfo; ?></a></span> | 
+				<span><a href="modeldata_update.php?m=<?php echo $m; ?>&id=<?php echo $row['id']; ?>">修改</a></span> | 
+				<span class="nb"><a href="modeldata_save.php?m=<?php echo $m; ?>&action=del2&id=<?php echo $row['id']; ?>&cid=<?php echo $cid; ?>" onclick="return ConfDel(0);">删除</a></span>
+			</td>
 		</tr>
 		<?php
 		}
@@ -132,5 +183,28 @@ if($cfg_quicktool == 'Y')
 <?php
 }
 ?>
+<script>
+jQuery(function($){
+    $("input.datainput").blur(function(){
+        console.log($(this).attr('mname'));
+        console.log($(this).attr('iid'));
+        console.log($(this).attr('dname'));
+        console.log($(this).attr('value'));
+		$.ajax({
+			url : "ajax_do.php?action=setmodeldiydata&m="+$(this).attr('mname')+"&i="+$(this).attr('iid')+"&d="+$(this).attr('dname')+"&v="+$(this).attr('value'),
+			type:'get',
+			dataType:'html',
+			beforeSend:function(){},
+			success:function(data, textStatus, xmlHttp){
+				if(data != ''){
+					$(".purviewList").html(data);
+				}
+			}
+		});
+    }); 
+}); 
+</script>
+
+</script>
 </body>
 </html>

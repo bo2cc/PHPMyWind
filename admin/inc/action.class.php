@@ -36,6 +36,7 @@ class actClass
 	public $parentstr;
 	public $orderid;
 	public $checkinfo;
+	public $infoflag;
 
 
 	//构造函数
@@ -67,6 +68,7 @@ class actClass
 		$this->parentstr = isset($GLOBALS['parentstr']) ? $GLOBALS['parentstr'] : '';
 		$this->orderid   = isset($GLOBALS['orderid'])   ? $GLOBALS['orderid']   : '';
 		$this->checkinfo = isset($GLOBALS['checkinfo']) ? $GLOBALS['checkinfo'] : '';
+		$this->infoflag  = isset($GLOBALS['infoflag']) ? $GLOBALS['infoflag'] : '';
 
 		$this->Exec_act();
     }
@@ -124,6 +126,10 @@ class actClass
 				$this->GoURL();
 			break;
 
+			case 'setflag':
+				$this->setflag();
+				$this->GoURL();
+			break;
 
 			default:
 		}
@@ -244,6 +250,19 @@ class actClass
 		{
 			$sql = "UPDATE `$this->tbname` SET isshow='1' WHERE id=$this->id";
 		}
+
+		$dosql->ExecNoneQuery($sql);
+	}
+
+
+	//设置信息属性
+	function setflag()
+	{
+		global $dosql;
+		// var_dump($dosql);
+		// var_dump($this->infoflag);
+
+		$sql = "UPDATE `$this->tbname` SET flag='".$this->infoflag."' WHERE id=$this->id";
 
 		$dosql->ExecNoneQuery($sql);
 	}

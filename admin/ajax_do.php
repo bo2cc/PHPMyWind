@@ -13,6 +13,28 @@ person: Feng
 $action = isset($action) ? $action : '';
 
 
+//自定义模块管理
+//列表页更新自定义字段
+if($action == 'setmodeldiydata')
+{
+	$mname		= isset($m) ? $m : '';
+	$iid		= isset($i) ? $i : '';
+	$dname 		= isset($d) ? $d : '';
+	$value   	= isset($v) ? $v : '';
+
+	$r = $dosql->GetOne("SELECT * FROM `#@__diyfield` WHERE `fieldname`='$dname'");
+	if ( ($r['fieldtype']=='decimal')||($r['fieldtype']=='int') ) {
+		$sql = "UPDATE `#@__".$mname."` SET $dname=$value WHERE id='$iid'";
+	}else if ( ($r['fieldtype']=='varchar')||($r['fieldtype']=='text')||($r['fieldtype']=='mediumtext') ) {
+		$sql = "UPDATE `#@__".$mname."` SET $dname='$value' WHERE id='$iid'";
+	}
+	
+	$dosql->ExecNoneQuery($sql);
+	
+	exit();
+}
+
+
 //设置当前站点
 if($action == 'selsite')
 {
