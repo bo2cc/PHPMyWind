@@ -1,4 +1,16 @@
-<?php require_once(dirname(__FILE__).'/inc/config.inc.php');IsModelPriv('diymodel');
+<?php
+require_once(dirname(__FILE__).'/inc/config.inc.php');IsModelPriv('diymodel');
+
+$cid = (isset($cid)) ? $cid : 0;
+$cid = (isset($_GET['cid'])) ? $_GET['cid'] : $cid;
+
+$sql_class = "SELECT * FROM `#@__infoclass` WHERE id=".$cid;
+	if ($cid==0) $sql_class = "SELECT * FROM `#@__infoclass` ORDER BY id desc";
+$rclass = $dosql->GetOne($sql_class);
+
+if(is_array($rclass)) $start_mid = $rclass["mtypesid"];
+else $start_mid = 0;
+
 
 //模型标识
 if(!empty($m))
@@ -37,6 +49,7 @@ else
 var editor;
 KindEditor.ready(function(K) { });
 </script>
+
 </head>
 <body>
 <?php
@@ -46,7 +59,7 @@ $defaultfield = explode(',', $r['defaultfield']);
 <div class="formHeader"> <span class="title">添加<?php echo $r['modeltitle']; ?></span> <a href="javascript:location.reload();" class="reload">刷新</a> </div>
 <form name="form" id="form" method="post" action="modeldata_save.php" onsubmit="return cfm_modeldata();">
 	<table width="100%" border="0" cellspacing="0" cellpadding="0" class="formTable">
-		<tr>
+		<tr class="<?php if ($cid<0) echo "nodisplay";?>">
 			<td width="25%" height="40" align="right">所属栏目：</td>
 			<td width="75%"><select name="classid" id="classid">
 					<option value="-1">请选择所属栏目</option>
@@ -80,6 +93,20 @@ $defaultfield = explode(',', $r['defaultfield']);
 		</tr>
 		<?php
 		}
+
+		if(in_array('mtype', $defaultfield))
+		{
+		?>
+		<tr>
+			<td height="40" align="right">多选类别： </td>
+			<td class="attrArea">
+			<?php
+				GetAllType2('#@__maintype',$r["modeltbname"],'multitypestr',$start_mid);
+			?>
+			</td>
+		</tr>
+		<?php
+		}
 		?>
 		<tr class="nb">
 			<td colspan="2" height="0" id="df"><?php if(isset($cid)) echo GetDiyField($r['id'],$cid); ?></td>
@@ -94,6 +121,26 @@ $defaultfield = explode(',', $r['defaultfield']);
 				<span class="cnote"><span class="grayBtn" onclick="GetUploadify('uploadify','缩略图上传','image','image',1,<?php echo $cfg_max_file_size; ?>,'picurl')">上 传</span> <span class="rePicTxt">
 				<input type="checkbox" name="rempic" id="rempic" value="true" />
 				远程</span> <span class="cutPicTxt"><a href="javascript:;" onclick="GetJcrop('jcrop','picurl');return false;">裁剪</a></span> </span></td>
+		</tr>
+		<?php
+		}
+
+		if(in_array('ridp', $defaultfield))
+		{
+		?>
+		<tr>
+			<td height="40" align="right">父ID：</td>
+			<td><input type="text" name="ridp" id="ridp" class="inputos" value="" /></td>
+		</tr>
+		<?php
+		}
+
+		if(in_array('rids', $defaultfield))
+		{
+		?>
+		<tr>
+			<td height="40" align="right">子ID列表：</td>
+			<td><input type="text" name="rids" id="rids" class="inputos" value="" /></td>
 		</tr>
 		<?php
 		}
@@ -138,6 +185,7 @@ $defaultfield = explode(',', $r['defaultfield']);
 		<input type="submit" class="submit" value="提交" />
 		<input type="button" class="back" value="返回" onclick="history.go(-1);" />
 		<input type="hidden" name="action" id="action" value="add" />
+		<input type="hidden" name="cid" id="cid" value="<?php echo $cid; ?>" />
 		<input type="hidden" name="m" id="m" value="<?php echo $m; ?>" />
 	</div>
 </form>

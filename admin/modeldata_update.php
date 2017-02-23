@@ -16,6 +16,7 @@ else
 	exit();
 }
 
+
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -37,11 +38,16 @@ else
 var editor;
 KindEditor.ready(function(K) { });
 </script>
+
+
 </head>
 <body>
 <div class="formHeader"> <span class="title">修改<?php echo $r['modeltitle']; ?></span> <a href="javascript:location.reload();" class="reload">刷新</a> </div>
 <?php
 $row = $dosql->GetOne("SELECT * FROM `".$r['modeltbname']."` WHERE id=$id");
+
+$rclass = $dosql->GetOne("SELECT * FROM `#@__infoclass` WHERE id=".$row['classid']); 
+if ( is_array($rclass) ) { $mtname = $rclass['classname']; }
 
 $defaultfield = array();
 $defaultfield = explode(',', $r['defaultfield']);
@@ -91,6 +97,16 @@ $defaultfield = explode(',', $r['defaultfield']);
 		</tr>
 		<?php
 		}
+		
+		if(in_array('mtype', $defaultfield))
+		{
+		?>
+		<tr>
+			<td height="40" align="right">多选类别：</td>
+			<td class="attrArea"><?php GetAllType2('#@__maintype',$r["modeltbname"],'multitypestr',$rclass["mtypesid"]); ?></td>
+		</tr>
+		<?php
+		}
 		?>
 		<tr class="nb">
 			<td colspan="2" height="0" id="df"><?php
@@ -107,6 +123,26 @@ $defaultfield = explode(',', $r['defaultfield']);
 				<span class="cnote"><span class="grayBtn" onclick="GetUploadify('uploadify','缩略图上传','image','image',1,<?php echo $cfg_max_file_size; ?>,'picurl')">上 传</span><span class="rePicTxt">
 				<input type="checkbox" name="rempic" id="rempic" value="true" />
 				远程</span> <span class="cutPicTxt"><a href="javascript:;" onclick="GetJcrop('jcrop','picurl');return false;">裁剪</a></span> </span></td>
+		</tr>
+		<?php
+		}
+
+		if(in_array('ridp', $defaultfield))
+		{
+		?>
+		<tr>
+			<td height="40" align="right">父ID：</td>
+			<td><input type="text" name="ridp" id="ridp" class="inputos" value="<?php echo $row['ridp']; ?>" /></td>
+		</tr>
+		<?php
+		}
+
+		if(in_array('rids', $defaultfield))
+		{
+		?>
+		<tr>
+			<td height="40" align="right">子ID列表：</td>
+			<td><input type="text" name="rids" id="rids" class="inputos" value="<?php echo $row['rids']; ?>" /></td>
 		</tr>
 		<?php
 		}
