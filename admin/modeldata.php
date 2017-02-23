@@ -9,12 +9,21 @@ if(!empty($m))
 		echo '<script>history.go(-1);</script>';
 		exit();
 	}
+	// 接受cid参数并判断其有效
+	if ( isset($cid) && ($cid <> "") ) {
+		$r_class = $dosql->GetOne("SELECT * FROM `#@__infoclass` WHERE `id`='".$cid."'");
+	} else {
+		$r_class = $dosql->GetOne("SELECT * FROM `#@__infoclass` WHERE `infotype`='".$r['id']."'");
+		$cid = (!empty($r_class) && is_array($r_class)) ? $r_class['id'] : '0';
+	}
 }
 else
 {
 	echo '<script>history.go(-1);</script>';
 	exit();
 }
+$admintitle = "未分类信息";
+if ($r_class['id']>0) $admintitle = $r_class['classname'];
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -27,7 +36,7 @@ else
 <script type="text/javascript" src="templates/js/forms.func.js"></script>
 </head>
 <body>
-<div class="topToolbar"> <span class="title"><?php echo $r['modeltitle']; ?></span> <span class="text"><a href="diymodel.php">模型管理</a></span> <a href="javascript:location.reload();" class="reload">刷新</a></div>
+<div class="topToolbar"> <span class="title"><?php echo $r['modeltitle']." / ".$admintitle; ?> </span> <a href="javascript:location.reload();" class="reload">刷新</a></div>
 <?php
 $fieldArr = array();
 
@@ -40,9 +49,9 @@ while($row = $dosql->GetArray())
 <form name="form" id="form" method="post" action="modeldata_save.php">
 	<table width="100%" border="0" cellpadding="0" cellspacing="0" class="dataTable">
 		<tr align="left" class="head">
-			<td width="5%" height="36" class="firstCol"><input type="checkbox" name="checkid" id="checkid" onclick="CheckAll(this.checked);"></td>
-			<td width="5%">ID</td>
-			<td>所属栏目</td>
+			<td width="20" height="36" class="firstCol"><input type="checkbox" name="checkid" id="checkid" onclick="CheckAll(this.checked);"></td>
+			<td>ID</td>
+			<td>标题</td>
 			<?php
 			foreach($fieldArr as $k=>$v)
 			{
@@ -54,14 +63,16 @@ while($row = $dosql->GetArray())
 		</tr>
 		<?php
 
-		$dopage->GetPage("SELECT * FROM `".$r['modeltbname']."` WHERE `siteid`='$cfg_siteid'");
+		$sql = "SELECT * FROM `".$r['modeltbname']."` WHERE `siteid`='$cfg_siteid' ";
+		if ($cid>0) $sql .= " and classid = ".$cid;
+		$dopage->GetPage($sql);
 		while($row = $dosql->GetArray())
 		{
 			//获取类型名称
-			$r = $dosql->GetOne("SELECT classname FROM `#@__infoclass` WHERE `id`=".$row['classid']);
+			$r_c = $dosql->GetOne("SELECT classname FROM `#@__infoclass` WHERE `id`=".$row['classid']);
 	
-			if(isset($r['classname']))
-				$classname = $r['classname'].' ['.$row['classid'].']';
+			if(isset($r_c['classname']))
+				$classname = $r_c['classname'].' ['.$row['classid'].']';
 			else
 				$classname = '<span class="red">分类已删 ['.$row['classid'].']</span>';
 
@@ -81,7 +92,7 @@ while($row = $dosql->GetArray())
 		<tr align="left" class="dataTr">
 			<td height="36" class="firstCol"><input type="checkbox" name="checkid[]" id="checkid[]" value="<?php echo $row['id']; ?>" /></td>
 			<td><?php echo $row['id']; ?></td>
-			<td><?php echo $classname; ?></td>
+			<td><?php echo $row['title']; ?> <?php //echo $classname; ?></td>
 			<?php
 			foreach($fieldArr as $k=>$v)
 			{
@@ -102,7 +113,7 @@ if($dosql->GetTotalRow() == 0)
 	echo '<div class="dataEmpty">暂时没有相关的记录</div>';
 }
 ?>
-<div class="bottomToolbar"> <span class="selArea"><span>选择：</span> <a href="javascript:CheckAll(true);">全部</a> - <a href="javascript:CheckAll(false);">无</a> - <a href="javascript:SubUrlParam('modeldata_save.php?m=<?php echo $m; ?>&action=delall2');" onclick="return ConfDelAll(0);">删除</a></span> <a href="modeldata_add.php?m=<?php echo $m; ?>" class="dataBtn">添加新信息</a> </div>
+<div class="bottomToolbar"> <span class="selArea"><span>选择：</span> <a href="javascript:CheckAll(true);">全部</a> - <a href="javascript:CheckAll(false);">无</a> - <a href="javascript:SubUrlParam('modeldata_save.php?m=<?php echo $m; ?>&action=delall2');" onclick="return ConfDelAll(0);">删除</a></span> <a href="modeldata_add.php?m=<?php echo $m; ?>&cid=<?php echo $cid;?>" class="dataBtn">添加新信息</a> </div>
 <div class="page"> <?php echo $dopage->GetList(); ?> </div>
 <?php
 
