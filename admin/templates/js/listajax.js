@@ -240,6 +240,17 @@ function CheckInfo(par_id,state)
 	});
 }
 
+//更改置顶状态
+function BetopInfo(par_id,state)
+{
+	id = par_id;
+	$.ajax({
+		url : tbn+"_save.php?action=betop&id="+id+"&betopinfo="+encodeURI(state),
+		type:'get',
+		dataType:'html',
+		success:function(data){$("#betop"+id).html(data);}
+	});
+}
 
 /******************************* 回收站 *******************************/
 

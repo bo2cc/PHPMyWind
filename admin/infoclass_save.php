@@ -32,7 +32,7 @@ if($action == 'add')
 	$parentstr = $doaction->GetParentStr();
 
 
-	$sql = "INSERT INTO `$tbname` (siteid, parentid, parentstr, infotype, classname, mtypesid, linkurl, picurl, picwidth, picheight, seotitle, keywords, description, orderid, checkinfo) VALUES ('$cfg_siteid', '$parentid', '$parentstr', '$infotype', '$classname', '$mtypesid',, '$linkurl', '$picurl', '$picwidth', '$picheight', '$seotitle', '$keywords', '$description', '$orderid', '$checkinfo')";
+	$sql = "INSERT INTO `$tbname` (siteid, parentid, parentstr, infotype, classname, mtypesid, linkurl, picurl, picwidth, picheight, seotitle, keywords, description, orderid, checkinfo) VALUES ('$cfg_siteid', '$parentid', '$parentstr', '$infotype', '$classname', '$mtypesid', '$linkurl', '$picurl', '$picwidth', '$picheight', '$seotitle', '$keywords', '$description', '$orderid', '$checkinfo')";
 	if($dosql->ExecNoneQuery($sql))
 	{
 		//为非超级管理员增加操作权限
