@@ -52,6 +52,7 @@ while($row = $dosql->GetArray())
 			<td width="20" height="36" class="firstCol"><input type="checkbox" name="checkid" id="checkid" onclick="CheckAll(this.checked);"></td>
 			<td>ID</td>
 			<td>标题</td>
+			<td>所属栏目</td>
 			<?php
 			foreach($fieldArr as $k=>$v)
 			{
@@ -66,7 +67,7 @@ while($row = $dosql->GetArray())
 
 		$sql = "SELECT * FROM `".$r['modeltbname']."` WHERE `siteid`='$cfg_siteid' ";
 		if ($cid>0) $sql .= " and classid = ".$cid;
-		$dopage->GetPage($sql);
+		$dopage->GetPage($sql,30);
 		while($row = $dosql->GetArray())
 		{
 			//获取类型名称
@@ -94,6 +95,7 @@ while($row = $dosql->GetArray())
 			<td height="36" class="firstCol"><input type="checkbox" name="checkid[]" id="checkid[]" value="<?php echo $row['id']; ?>" /></td>
 			<td><?php echo $row['id']; ?></td>
 			<td><?php echo $row['title']; ?></td>
+			<td><?php echo $classname; ?></td>
 			<?php
 			foreach($fieldArr as $k=>$v) {
 				if ($k<>"content"){
