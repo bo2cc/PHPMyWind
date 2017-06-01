@@ -301,7 +301,7 @@ if($dopost == 'reset')
 		//如果包含配置表，则需要更新配置文件
 		if(preg_match("#webconfig#", $fname))
 			$conftb = 1;
-		
+
 		if(empty($conftb)) $conftb = '';
 	}
 
@@ -385,25 +385,25 @@ if($dopost == 'reset')
 				while($row = $dosql->GetArray())
 				{
 					//强制去掉 '
-					//强制去掉最后一位 / 
+					//强制去掉最后一位 /
 					$vartmp = str_replace("'",'',$row['varvalue']);
 
 					if(substr($vartmp, -1) == '\\')
 					{
 						$vartmp = substr($vartmp,1,-1);
 					}
-			
+
 					if($row['vartype'] == 'number')
 					{
 						if($row['varvalue'] == '')
 						{
 							$vartmp = 0;
 						}
-			
+
 						$str .= "\${$row['varname']} = ".$vartmp.";\r\n";
 					}
 					else
-					{			
+					{
 						$str .= "\${$row['varname']} = '".$vartmp."';\r\n";
 					}
 				}

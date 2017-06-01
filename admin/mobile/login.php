@@ -83,7 +83,7 @@ $(function(){
 			<input type="hidden" name="dopost" value="login" />
 		</form>
 	</div>
-	<div class="loginCopyright">© 2015 phpMyWind.com</div>
+	<div class="loginCopyright">© 2017 phpMyWind.com</div>
 </div>
 </body>
 </html>
